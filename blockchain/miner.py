@@ -31,8 +31,8 @@ def proof_of_work(last_proof):
     # Want to ensure that I have a valid proof w/ a random string
     # Don't want to start at 1, because those will get checked fast. Want to start w/ a bit of a higher number
     while valid_proof(last_hash, proof) is False:
-        if (timer() - start < 5):
-            proof += random.randint(75, 4000)
+        if (timer() - start <= 5):
+            proof += 1
         else:
             proof = 0
             break
