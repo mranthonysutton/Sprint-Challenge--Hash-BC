@@ -20,12 +20,11 @@ def proof_of_work(last_proof):
     - Use the same method to generate SHA-256 hashes as the examples in class
     """
 
+    last_hash = hashlib.sha256(f"{last_proof}".encode()).hexdigest()
     start = timer()
-    hash_str = f"{last_proof}".encode()
-    last_hash = hashlib.sha256(hash_str).hexdigest()
 
     print("Searching for next proof")
-    proof = 5000
+    proof = 1000
     #  TODO: Your code here
 
     # Want to ensure that I have a valid proof w/ a random string
@@ -52,8 +51,7 @@ def valid_proof(last_hash, proof):
 
     # TODO: Your code here!
     # Need to hash the string and then return the first 5 digits
-    hash_str = f"{proof}".encode()
-    result = hashlib.sha256(hash_str).hexdigest()
+    result = hashlib.sha256(f"{proof}".encode()).hexdigest()
 
     return last_hash[-5:] == result[:5]
 
