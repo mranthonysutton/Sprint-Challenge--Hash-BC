@@ -21,10 +21,17 @@ def proof_of_work(last_proof):
     """
 
     start = timer()
+    hash_str = f"{last_proof}".encode()
+    last_hash = hashlib.sha256(hash_str).hexdigest()
 
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
+
+    # Want to ensure that I have a valid proof w/ a random string
+    # Don't want to start at 1, because those will get checked fast. Want to start w/ a bit of a higher number
+    while valid_proof(last_hash, proof) is False:
+        proof += random.randint(1200, 999999)
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -40,7 +47,11 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    # Need to hash the string and then return the first 5 digits
+    hash_str = f"{proof}".encode()
+    result = hashlib.sha256(hash_str).hexdigest()
+
+    return last_hash[-5:] == result[: 5]
 
 
 if __name__ == '__main__':
