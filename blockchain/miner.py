@@ -20,11 +20,21 @@ def proof_of_work(last_proof):
     - Use the same method to generate SHA-256 hashes as the examples in class
     """
 
+    last_hash = hashlib.sha256(f"{last_proof}".encode()).hexdigest()
     start = timer()
 
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
+
+    # Want to ensure that I have a valid proof w/ a random string
+    # Don't want to start at 1, because those will get checked fast. Want to start w/ a bit of a higher number
+    while valid_proof(last_hash, proof) is False:
+        if (timer() - start <= 5):
+            proof += random.randint(1200, 999999)
+        else:
+            proof = 0
+            break
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -40,7 +50,10 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    # Need to hash the string and then return the first 5 digits
+    result = hashlib.sha256(f"{proof}".encode()).hexdigest()
+
+    return last_hash[-5:] == result[:5]
 
 
 if __name__ == '__main__':
@@ -63,11 +76,23 @@ if __name__ == '__main__':
         exit()
     # Run forever until interrupted
     while True:
+        # # Get the last proof from the server
+        # r = requests.get(url=node + "/last_proof")
+        # data = r.json()
+        # new_proof = proof_of_work(data.get('proof'))
+
         # Get the last proof from the server
         r = requests.get(url=node + "/last_proof")
-        data = r.json()
+        try:
+            data = r.json()
+        except ValueError:
+            print("Error:  Non-json response")
+            print("Response returned:")
+            print(r)
+            break
         new_proof = proof_of_work(data.get('proof'))
-
+        if new_proof is None:
+            continue
         post_data = {"proof": new_proof,
                      "id": id}
 

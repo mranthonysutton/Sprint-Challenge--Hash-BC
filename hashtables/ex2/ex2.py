@@ -19,5 +19,22 @@ def reconstruct_trip(tickets, length):
     """
     YOUR CODE HERE
     """
+    # Loop through each ticket and grab the source and destination
+    # Add the source & destination to the hashtable
 
-    pass
+    for ticket in tickets:
+        hash_table_insert(hashtable, ticket.source, ticket.destination)
+
+    # Sets the default HashTable index to 0
+    index = 0
+
+    current_index = hash_table_retrieve(hashtable, "NONE")
+
+    # Goes through the hashtable and sets the current_ticket to the current index and returns the routes
+    while index < len(route):
+        route[index] = current_index
+        index += 1
+
+        current_index = hash_table_retrieve(hashtable, current_index)
+
+    return route[:-1]
